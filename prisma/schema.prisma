@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  nameUser String?
+  password String?
+
+  // Relación con Role (FK)
+  roleId   Int
+  userRole Role     @relation(fields: [roleId], references: [id]) 
+
+  // Relación inversa con Report
+  reports  Report[]
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  roleName   String   @unique
+
+  // Relación inversa con User
+  users      User[]
+}
+
+model Student {
+  id           Int      @id @default(autoincrement())
+  studentName  String?
+  matricula    String?
+
+  // Relación con Grade (FK)
+  gradeId      Int
+  currentGrade Grade    @relation(fields: [gradeId], references: [idGrade])
+
+  // Relación inversa con Report
+  report       Report[]
+}
+
+model Grade {
+  idGrade     Int      @id @default(autoincrement())
+  gradeNumber Int      @unique
+
+  // Relación inversa con Student
+  student     Student[]
+}
+
+model Report {
+  idReport    Int      @id @default(autoincrement())
+  description String?
+  dateIncdnt  DateTime @default(now())
+
+  // Relación con Incident
+  incidentId  Int
+  incident    Incident @relation(fields: [incidentId], references: [idIncident])
+  
+  // Relación con User
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+
+  // Relación con Student
+  studentId   Int
+  student     Student  @relation(fields: [studentId], references: [id])
+}
+
+model Incident {
+  idIncident  Int      @id @default(autoincrement())
+  nameIncdnt  String?
+  
+  // Relación inversa con Report
+  reports     Report[]
+}
+
