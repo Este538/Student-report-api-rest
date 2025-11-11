@@ -33,6 +33,7 @@ model Role {
   users      User[]
 }
 
+//Ya está listo
 model Student {
   id           Int      @id @default(autoincrement())
   studentName  String?
@@ -46,6 +47,7 @@ model Student {
   report       Report[]
 }
 
+//Ya está listo
 model Grade {
   idGrade     Int      @id @default(autoincrement())
   gradeNumber Int      @unique
