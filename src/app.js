@@ -2,6 +2,8 @@ import express from 'express';
 import morgan from "morgan";
 import pkg from '../package.json' with {type:'json'};
 import studentRoute from '../src/routes/student.route.js';
+import usersRoute from '../src/routes/user.route.js';
+
 import helmet from 'helmet';
 
 const app = express();
@@ -35,5 +37,6 @@ app.get('/',(req, res)=>{
 });
 
 app.use('/api/students', studentRoute);
+app.use('/api/users', usersRoute);
 
 export default app;

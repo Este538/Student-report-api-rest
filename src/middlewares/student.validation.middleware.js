@@ -1,13 +1,15 @@
+
 import { prisma } from "../utils/prisma.js";
+
 
 export const validateStudentData = (req, res, next) => {
     
     const { studentName, matricula, currentGrade } = req.body;
-
+    const arrayData = [studentName, matricula];
     
     if (!studentName || !matricula || !currentGrade) {
         return res.status(400).json({ 
-            message: "Data Incomplete. It requires 'studentName', 'matricula' y 'currentGrade'." 
+            message: "Data Incomplete. It requires 'student Name', 'matricula' y 'current Grade'." 
         });
     }
 
@@ -15,16 +17,26 @@ export const validateStudentData = (req, res, next) => {
 
     if (isNaN(gradeId) || gradeId <= 0) {
         return res.status(400).json({ 
-            message: "The 'currentGrade' (ID from Grade) must be a natural Number." 
+            message: "The 'current Grade' (ID from Grade) must be a natural Number." 
         });
     }
 
+    //Refactor version
+    arrayData.forEach(data => {
+        if(typeof data !== 'string' || data.trim().length === 0){
+            return res.status(400).json({
+                message: "It must be a String"
+            });
+        }
+    });
+
+    /* functional version
     if (typeof studentName !== 'string' || studentName.trim().length === 0 ||
         typeof matricula !== 'string' || matricula.trim().length === 0) {
         return res.status(400).json({
             message: "It must be a String"
         });
-    }
+    }*/
 
     req.body.currentGrade = gradeId;
 
