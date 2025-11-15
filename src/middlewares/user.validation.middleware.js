@@ -21,14 +21,14 @@ export const matchPassword = async (req, res, next) => {
 
         if (!userFound) {
             // Usamos 400 o 401 para evitar enumeración de usuarios
-            return res.status(400).json({ message: "Usuario o Contraseña inválida" });
+            return res.status(400).json({ message: "User incorrect" });
         }
         
         // 2. Comparar password usando la función de tu archivo encrypt.js
         const matchedPassword = await encrypt.comparePassword(password, userFound.password);
         
         if (!matchedPassword) {
-            return res.status(401).json({ message: "Usuario o Contraseña inválida" });
+            return res.status(401).json({ message: "Password Incorrect" });
         }
 
         // Si la contraseña coincide, guardamos el ID del usuario en el request 
@@ -38,8 +38,8 @@ export const matchPassword = async (req, res, next) => {
         next();
         
     } catch (error) {
-        console.error("Error en matchPassword:", error);
-        return res.status(500).json({ message: "Error interno en la verificación de contraseña." });
+        console.error("Error in matchPassword:", error);
+        return res.status(500).json({ message: "Intern Error in password validation." });
     }
 };
 
@@ -52,14 +52,14 @@ export const verifyUser = (req, res, next) => {
     // Validación base para cualquier petición de autenticación
     if (!email || !password) {
         return res.status(400).json({
-            message: 'Email y contraseña son obligatorios.'
+            message: 'Email and password are required.'
         });
     }
 
     // Validación específica para la ruta de registro (/signUp)
     if(req.originalUrl.includes('/signUp') && !nameUser) {
         return res.status(400).json({
-            message: 'Información incompleta: Falta el nombre de usuario para el registro.'
+            message: 'Incomplete information: Need User name to Sign Up.'
         });
     }
 
@@ -88,7 +88,7 @@ export const verifyRoleExist = async (req, res, next) => {
             });
 
             if (foundRoles.length === 0) {
-                return res.status(400).json({ message: "Rol(es) proporcionados no encontrado(s)." });
+                return res.status(400).json({ message: "Rol(es) not found." });
             }
 
             roleIdToAssign = foundRoles[0].id;
@@ -101,7 +101,7 @@ export const verifyRoleExist = async (req, res, next) => {
             });
             
             if (!defaultRole) {
-                return res.status(500).json({ message: "El rol por defecto 'teacher' no existe. ¡Ejecuta el seeder!" });
+                return res.status(500).json({ message: "Role by defect 'teacher' not exist." });
             }
             roleIdToAssign = defaultRole.id;
         }
@@ -113,6 +113,30 @@ export const verifyRoleExist = async (req, res, next) => {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Error al verificar la existencia del rol." });
+        return res.status(500).json({ message: "Error in validate existence role." });
     }
+};
+
+export const checkDuplicateEmail = async (req,res, next)=> {
+    const {email} = req.body;
+
+    const duplicateEmail = await prisma.user.findFirst({
+        where:  {email: email},
+        select: {id: true},
+    });
+
+    if(duplicateEmail) return res.status(409).json({message: "Email has been registered in another User"});
+    next();
+};
+
+export const checkDuplicateName = async (req,res, next)=> {
+    const {nameUser} = req.body;
+
+    const duplicateName = await prisma.user.findFirst({
+        where:  {nameUser: nameUser},
+        select: {id: true},
+    });
+
+    if(duplicateName) return res.status(409).json({message: "Name has been registered in another User"});
+    next();
 };

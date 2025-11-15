@@ -78,7 +78,7 @@ export const login = async (req, res) => {
 
         // La verificación de password ya debería haber ocurrido en el middleware
         if (!userFound) {
-            return res.status(400).json({ message: "Usuario no encontrado" }); // Error de lógica/middleware, pero lo mantenemos por seguridad
+            return res.status(400).json({ message: "User not found" }); // Error de lógica/middleware, pero lo mantenemos por seguridad
         }
 
         const token = await generateToken({ id: userFound.id }, process.env.KEY_SECRET );
