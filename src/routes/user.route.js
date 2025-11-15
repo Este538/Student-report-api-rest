@@ -16,7 +16,9 @@ router.post('/login',
 router.post('/signUp',
     [
         userMidlw.verifyUser,      // Primero verifica todos los campos de registro (incluyendo nameUser)
-        userMidlw.verifyRoleExist  // Luego verifica el rol y asigna el roleId
+        userMidlw.verifyRoleExist,  // Luego verifica el rol y asigna el roleId
+        userMidlw.checkDuplicateEmail,
+        userMidlw.checkDuplicateName
     ],
     userContrl.signUp
 );
