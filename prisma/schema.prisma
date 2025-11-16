@@ -76,7 +76,7 @@ model Report {
 
 model Incident {
   idIncident  Int      @id @default(autoincrement())
-  nameIncdnt  String?
+  nameIncdnt  String?  @unique
   
   // Relación inversa con Report
   reports     Report[]

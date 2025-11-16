@@ -49,6 +49,26 @@ async function main() {
 
   console.log('Siembra de Roles completada.');
   console.log('---------------------------------');
+
+  const incidents = [
+   { nameIncdnt: 'Observation'},
+   { nameIncdnt: 'Positive'},
+   { nameIncdnt: 'Negative'},
+   { nameIncdnt: 'Terrible'},
+   { nameIncdnt: 'Abomination'},
+   { nameIncdnt: 'Real dangerous'}
+  ];
+
+  for (const incident of incidents) {
+   // Usamos 'upsert' para crear el rol si no existe (basado en roleName que es @unique)
+   const newIncident = await prisma.incident.upsert({
+       where: { nameIncdnt: incident.nameIncdnt },
+          update: {}, // No actualizar si ya existe
+          create: incident,
+    });
+    console.log(`Creado/Encontrado Incident con id: ${newIncident.idIncident} y roleName: ${newIncident.nameIncdnt}`);
+  }
+
   console.log('Siembra de datos finalizada.');
 }
 
