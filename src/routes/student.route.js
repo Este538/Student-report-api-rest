@@ -2,8 +2,11 @@ import { Router } from "express";
 
 import * as studentContrl from '../controllers/student.controller.js';
 import * as evalStudents from '../middlewares/student.validation.middleware.js';
+import * as auth from '../utils/auth.js';
 
 const router = Router();
+
+router.use(auth.authenticateToken, auth.requireTeacher);
 
 router.get('/',studentContrl.getAllStudent);
 
