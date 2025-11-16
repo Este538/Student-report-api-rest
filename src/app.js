@@ -3,6 +3,7 @@ import morgan from "morgan";
 import pkg from '../package.json' with {type:'json'};
 import studentRoute from '../src/routes/student.route.js';
 import usersRoute from '../src/routes/user.route.js';
+import reportRouter from '../src/routes/report.route.js'
 
 import helmet from 'helmet';
 
@@ -38,5 +39,6 @@ app.get('/',(req, res)=>{
 
 app.use('/api/students', studentRoute);
 app.use('/api/users', usersRoute);
+app.use('/api/report', reportRouter);
 
 export default app;
