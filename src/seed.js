@@ -1,12 +1,12 @@
 import { prisma } from "../src/utils/prisma.js";
 
 async function main() {
- console.log('Iniciando siembra de datos...');
+ console.log('Starting data seeding...');
 
- // --- 1. Siembra de datos de Grados (Grades) ---
- console.log('Iniciando siembra de datos de Grados...');
+ // --- 1. Seeding data (Grades) ---
+ console.log('Starting data seeding...');
 
- // Datos de ejemplo para la tabla Grade
+ // data example for Grade table
  const grades = [
    { gradeNumber: 1 },
    { gradeNumber: 2 },
@@ -16,38 +16,38 @@ async function main() {
 ];
 
    for (const grade of grades) {
-     // Usamos 'upsert' para crear el grado si no existe (basado en gradeNumber que es @unique)
+     // Use 'upsert' to create a grade doesn't exist (based in gradeNumber @unique)
      const newGrade = await prisma.grade.upsert({
         where: { gradeNumber: grade.gradeNumber },
-          update: {}, // No actualizar si ya existe
+          update: {}, // Update nothing if already exists
           create: grade,
     });
-    console.log(`Creado/Encontrado grado con idGrade: ${newGrade.idGrade} y gradeNumber: ${newGrade.gradeNumber}`);
+    console.log(`Created/Founded grade with idGrade: ${newGrade.idGrade} & gradeNumber: ${newGrade.gradeNumber}`);
   }
 
-  console.log('Siembra de Grados completada.');
+  console.log('Completed data seeding...');
   console.log('---------------------------------');
 
-  // --- 2. Siembra de datos de Roles (Roles) ---
-  console.log('Iniciando siembra de datos de Roles...');
+  // --- 2. Seeding data (Roles) ---
+  console.log('Starting data seeding Roles...');
 
-  // Datos de ejemplo para la tabla Role (admin y teacher)
+  // Data example in table Role (admin y teacher)
   const roles = [
    { roleName: "admin" },
    { roleName: "teacher" }
   ];
 
   for (const role of roles) {
-   // Usamos 'upsert' para crear el rol si no existe (basado en roleName que es @unique)
+   // Use 'upsert' if not exist (based in roleName @unique)
    const newRole = await prisma.role.upsert({
        where: { roleName: role.roleName },
           update: {}, // No actualizar si ya existe
           create: role,
     });
-    console.log(`Creado/Encontrado rol con id: ${newRole.id} y roleName: ${newRole.roleName}`);
+    console.log(`Created/Founded rol with id: ${newRole.id} & roleName: ${newRole.roleName}`);
   }
 
-  console.log('Siembra de Roles completada.');
+  console.log('Seeding Roles completed.');
   console.log('---------------------------------');
 
   const incidents = [
@@ -60,16 +60,16 @@ async function main() {
   ];
 
   for (const incident of incidents) {
-   // Usamos 'upsert' para crear el rol si no existe (basado en roleName que es @unique)
+   // Use 'upsert' to create rol if not exist (based in roleName @unique)
    const newIncident = await prisma.incident.upsert({
        where: { nameIncdnt: incident.nameIncdnt },
-          update: {}, // No actualizar si ya existe
+          update: {}, // No update if already exists
           create: incident,
     });
-    console.log(`Creado/Encontrado Incident con id: ${newIncident.idIncident} y roleName: ${newIncident.nameIncdnt}`);
+    console.log(`Created/Founded Incident with id: ${newIncident.idIncident} & roleName: ${newIncident.nameIncdnt}`);
   }
 
-  console.log('Siembra de datos finalizada.');
+  console.log('Completed data seeding.');
 }
 
 main()
