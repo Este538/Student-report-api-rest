@@ -6,6 +6,7 @@ import * as auth from '../utils/auth.js';
 
 const router = Router();
 
+// Whole router protected: only authenticated Teachers can access
 router.use(auth.authenticateToken, auth.requireTeacher);
 
 router.get('/',studentContrl.getAllStudent);

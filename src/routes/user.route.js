@@ -5,6 +5,7 @@ import * as userMidlw from '../middlewares/user.validation.middleware.js';
 
 const router = Router();
 
+// Route for user login middlewares to verify data
 router.post('/login',
     [
         userMidlw.verifyUser,     
@@ -13,6 +14,7 @@ router.post('/login',
     userContrl.login
 );
 
+// Route for user signUp with middlewares to verify data
 router.post('/signUp',
     [
         userMidlw.verifyUser,      

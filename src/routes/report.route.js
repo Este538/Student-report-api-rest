@@ -8,11 +8,11 @@ import { authenticateToken, requireTeacher } from '../utils/auth.js';
 
 const router = express.Router();
 
-// Todas las rutas requieren autenticación y rol de maestro
+// Whole router protected: only authenticated Teachers can access
 router.use(authenticateToken, requireTeacher);
 
 router.post('/', createReport);
 router.get('/', getAllReports);
-router.get('/incidents', getIncidentTypes); // Para obtener tipos de incidente
+router.get('/incidents', getIncidentTypes); // Obtain incident types
 
 export default router;
