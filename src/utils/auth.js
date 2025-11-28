@@ -2,6 +2,17 @@ import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { prisma } from './prisma.js';
 
+
+
+/**
+ * Authenticate JWT token from request headers
+ *
+ * @async
+ * @param {object} req it must contain headers with x-access-token
+ * @param {object} res object to send response
+ * @param {()=>} next function to continue to next middleware
+ * @returns {json | void} calls next() or returns json with error (403, 404, 401)
+ */
 export const authenticateToken = async (req, res, next) => {
     try {
         const token = req.headers["x-access-token"];
@@ -10,11 +21,11 @@ export const authenticateToken = async (req, res, next) => {
             return res.status(403).json({ message: "Token not provided" });
         }
 
-        // Verificar token
+        // Token verification
         const decoded = jwt.verify(token, process.env.KEY_SECRET);
         req.userId = decoded.id;
 
-        // Buscar usuario y rol
+        // Fetch user from database
         const user = await prisma.user.findUnique({
             where: { id: req.userId },
             select: {
@@ -33,7 +44,7 @@ export const authenticateToken = async (req, res, next) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Guardar el usuario dentro de req para middlewares posteriores
+        // Save user info in request
         req.user = user;
         next();
 
@@ -46,6 +57,15 @@ export const authenticateToken = async (req, res, next) => {
     }
 };
 
+
+/**
+ * Validate that user is a Teacher
+ *
+ * @param {object} req contains -user- info from previous middleware
+ * @param {object} res object to send response
+ * @param {object} next calls next middleware
+ * @returns {json | void} returns json with error (401, 403) or calls next()
+ */
 
 export const requireTeacher = (req, res, next) => {
     try {
